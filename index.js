@@ -1,21 +1,27 @@
+const jugadoresEnMemoria = JSON.parse(localStorage.getItem("jugadores"));
+const rankingEnMemoria = JSON.parse(localStorage.getItem("ranking"));
+
 let id = 1;
-let jugadores = [];
+let jugadores = jugadoresEnMemoria || [];
 let jugadoresAdentro = [];
 let jugadoresAfuera = [];
 let equipos = [];
 let resultados = [];
 
 function agregarJugador() {
-  const playerName = document.getElementById("player-name").value;
-  if (playerName !== "") {
+  const nombre = document.getElementById("player-name").value;
+  if (nombre !== "") {
     const player = {
       id,
-      nombre: playerName,
+      nombre: nombre,
       partidos: 0,
+      puntos: 0,
     };
+
     id++;
     jugadores.push(player);
     localStorage.setItem("jugadores", JSON.stringify(jugadores));
+
     document.getElementById("player-name").value = "";
     mostrarJugadores();
   }
@@ -38,6 +44,17 @@ function mostrarJugadores() {
     listItem.textContent = jugador.nombre;
     playersList.appendChild(listItem);
   });
+}
+
+function eliminarJugadores() {
+  localStorage.clear();
+
+  jugadores = [];
+  jugadoresAdentro = [];
+  jugadoresAfuera = [];
+
+  mostrarEquipos();
+  mostrarJugadores();
 }
 
 function iniciarPartido() {
@@ -131,15 +148,42 @@ function mostrarEquipos() {
   });
 }
 
-function simularPartido() {
-  resultados = [];
+function confirmarResultado() {
+  const resultadoEquipo1 = parseInt(
+    document.getElementById("resultado1").value
+  );
+  const resultadoEquipo2 = parseInt(
+    document.getElementById("resultado2").value
+  );
 
-  // Lógica para simular un partido y registrar resultados
-  // Puedes mejorar esta lógica según tus necesidades
+  if (
+    !isNaN(resultadoEquipo1) &&
+    !isNaN(resultadoEquipo2) &&
+    !(resultadoEquipo1 > 7 || resultadoEquipo2 > 7)
+  ) {
+    const resultado = `${resultadoEquipo1} - ${resultadoEquipo2}`;
+    resultados.push(resultado);
 
-  // ...
+    jugadores.forEach((element, index) => {
+      if (equipos[0].map((j) => j.id).includes(element.id)) {
+        jugadores[index].puntos += resultadoEquipo1;
+      } else if (equipos[1].map((j) => j.id).includes(element.id)) {
+        jugadores[index].puntos += resultadoEquipo2;
+      }
+    });
 
-  // Mostrar resultados en la interfaz
+    // Limpiar los inputs después de sumar resultados
+    document.getElementById("resultado1").value = "";
+    document.getElementById("resultado2").value = "";
+
+    sumarRankings();
+    mostrarResultados();
+  } else {
+    alert("Ingresa resultados válidos.");
+  }
+}
+
+function mostrarResultados() {
   const resultsList = document.getElementById("results-list");
   resultsList.innerHTML = "";
   resultados.forEach((resultado, index) => {
@@ -149,5 +193,22 @@ function simularPartido() {
   });
 }
 
+function sumarRankings() {
+  const ranking = jugadores.sort((a, b) => b.puntos - a.puntos);
+
+  const rankingList = document.getElementById("ranking-list");
+  rankingList.innerHTML = "";
+  ranking.forEach((jugador, index) => {
+    const listItem = document.createElement("li");
+    listItem.textContent = `${index + 1} - ${jugador.nombre}: ${
+      jugador.puntos
+    } puntos`;
+    rankingList.appendChild(listItem);
+  });
+
+  localStorage.setItem("ranking", JSON.stringify(ranking));
+}
+
 // Llamada a funciones de inicialización
 mostrarJugadores();
+sumarRankings();
