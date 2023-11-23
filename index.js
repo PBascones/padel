@@ -105,35 +105,30 @@ function formarEquipos(isNew = false) {
 
 function intercambiarJugadores() {
   // Lógica para intercambiar jugadores entre equipos después de cada partido
-  let equipo1 = equipos[0];
-  let equipo2 = equipos[1];
+  let jugadoresSalen = jugadoresAdentro.filter(
+    (jugador) => jugador.partidos >= 2
+  );
 
-  let jugadorSaleEquipo1 = equipo1.find((j) => j.partidos >= 2);
-  let jugadorSaleEquipo2 = equipo2.find((j) => j.partidos >= 2);
-
-  if (jugadorSaleEquipo1 !== undefined && jugadorSaleEquipo2 !== undefined) {
-    equipo1 = equipo1.filter((j) => j.id !== jugadorSaleEquipo1.id);
-    equipo2 = equipo2.filter((j) => j.id !== jugadorSaleEquipo2.id);
-  } else {
-    jugadorSaleEquipo1 = equipo1.pop();
-    jugadorSaleEquipo2 = equipo2.pop();
+  if (jugadoresSalen.length === 0) {
+    jugadoresSalen.push(equipos[0].pop());
+    jugadoresSalen.push(equipos[1].pop());
   }
 
   // sacar jugadores
   jugadoresAdentro = jugadoresAdentro.filter(
-    (j) => j.id != jugadorSaleEquipo1.id && j.id != jugadorSaleEquipo2.id
+    (j) => !jugadoresSalen.map((jj) => jj.id).includes(j.id)
   );
 
   jugadoresAdentro.push(jugadoresAfuera[0]);
   jugadoresAdentro.push(jugadoresAfuera[1]);
 
   // reset partidos quienes salen
-  jugadorSaleEquipo1.partidos = 0;
-  jugadorSaleEquipo2.partidos = 0;
-
   jugadoresAfuera = [];
-  jugadoresAfuera.push(jugadorSaleEquipo1);
-  jugadoresAfuera.push(jugadorSaleEquipo2);
+
+  jugadoresSalen.forEach((j) => {
+    j.partidos = 0;
+    jugadoresAfuera.push(j);
+  });
 }
 
 function mostrarEquipos() {
@@ -161,7 +156,10 @@ function confirmarResultado() {
     !isNaN(resultadoEquipo2) &&
     !(resultadoEquipo1 > 7 || resultadoEquipo2 > 7)
   ) {
-    const resultado = `${resultadoEquipo1} - ${resultadoEquipo2}`;
+    const resultado = `${equipos[0]
+      .map((x) => x.nombre)
+      .join(", ")} ${resultadoEquipo1} -
+       ${resultadoEquipo2} ${equipos[1].map((x) => x.nombre).join(", ")}`;
     resultados.push(resultado);
 
     jugadores.forEach((element, index) => {
