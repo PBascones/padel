@@ -7,6 +7,7 @@ let jugadoresAdentro = [];
 let jugadoresAfuera = [];
 let equipos = [];
 let resultados = [];
+let ranking = [];
 
 function agregarJugador() {
   const nombre = document.getElementById("player-name").value;
@@ -135,11 +136,13 @@ function mostrarEquipos() {
   const teamsList = document.getElementById("teams-list");
   teamsList.innerHTML = "";
   equipos.forEach((equipo, index) => {
-    const listItem = document.createElement("li");
-    listItem.textContent = `Equipo ${index + 1}: ${equipo
+    const team = document.createElement("h3");
+
+    team.className = "team-members";
+    team.textContent = `Equipo ${index + 1}: ${equipo
       .map((x) => x.nombre)
       .join(", ")}`;
-    teamsList.appendChild(listItem);
+    teamsList.appendChild(team);
   });
 }
 
@@ -176,6 +179,8 @@ function confirmarResultado() {
 
     sumarRankings();
     mostrarResultados();
+
+    iniciarPartido();
   } else {
     alert("Ingresa resultados válidos.");
   }
@@ -191,8 +196,20 @@ function mostrarResultados() {
   });
 }
 
-function sumarRankings() {
-  const ranking = jugadores.sort((a, b) => b.puntos - a.puntos);
+function sumarRankings(inicializar) {
+  if (inicializar) {
+    ranking =
+      (rankingEnMemoria.length && rankingEnMemoria) ||
+      jugadores.sort((a, b) => b.puntos - a.puntos);
+  } else {
+    ranking.forEach((jugador) => {
+      jugador.puntos += jugadores.filter((j) => j.id === jugador.id)[0].puntos;
+    });
+
+    ranking.sort((a, b) => b.puntos - a.puntos)
+  }
+
+  jugadores.forEach((j) => (j.puntos = 0));
 
   const rankingList = document.getElementById("ranking-list");
   rankingList.innerHTML = "";
@@ -209,4 +226,6 @@ function sumarRankings() {
 
 // Llamada a funciones de inicialización
 mostrarJugadores();
-sumarRankings();
+sumarRankings(true);
+
+// hacer que se inicie un nuevo partido desp de confirmar
