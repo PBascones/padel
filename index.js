@@ -25,6 +25,7 @@ function agregarJugador() {
 
     document.getElementById("player-name").value = "";
     mostrarJugadores();
+    sumarRankings(true);
   }
 }
 
@@ -56,6 +57,8 @@ function eliminarJugadores() {
 
   mostrarEquipos();
   mostrarJugadores();
+  
+  location.reload();
 }
 
 function iniciarPartido() {
@@ -198,9 +201,10 @@ function mostrarResultados() {
 
 function sumarRankings(inicializar) {
   if (inicializar) {
+    const jugadoresDelRanking = jugadores.map(j => ({...j}))
     ranking =
       (rankingEnMemoria.length && rankingEnMemoria) ||
-      jugadores.sort((a, b) => b.puntos - a.puntos);
+      jugadoresDelRanking.sort((a, b) => b.puntos - a.puntos);
   } else {
     ranking.forEach((jugador) => {
       jugador.puntos += jugadores.filter((j) => j.id === jugador.id)[0].puntos;
