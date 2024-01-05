@@ -1,5 +1,5 @@
 const jugadoresEnMemoria = JSON.parse(localStorage.getItem("jugadores"));
-const rankingEnMemoria = JSON.parse(localStorage.getItem("ranking"));
+const rankingEnMemoria = JSON.parse(localStorage.getItem("ranking")) || [];
 
 let id = 1;
 let jugadores = jugadoresEnMemoria || [];
