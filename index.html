@@ -49,13 +49,37 @@
       </div>
     </div>
 
-    <div class="row mb-4">
-      <div class="col-12">
-        <button class="btn btn-success" onclick="iniciarPartido()">
-          Formar equipos
-        </button>
+   <form action="#" onsubmit="crearEquipos()">
+    <div class="row">
+      <div class="col-3 form-group mb-3">
+        <label for="player-name">Jugador 1:</label>
+        <input type="text" class="form-control" id="player-1" />
+      </div>
+      <div class="col-3 form-group mb-3">
+        <label for="player-name">Jugador 2:</label>
+        <input type="text" class="form-control" id="player-2" />
       </div>
     </div>
+    <div class="row">
+      <div class="col-3 form-group mb-3">
+        <label for="player-name">Jugador 3:</label>
+        <input type="text" class="form-control" id="player-3" />
+      </div>
+      <div class="col-3 form-group mb-3">
+        <label for="player-name">Jugador 4:</label>
+        <input type="text" class="form-control" id="player-4" />
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <submit class="btn btn-success">
+        Formar equipos
+      </submit>
+      <button class="btn btn-success" onclick="iniciarPartido()">
+        Al azar
+      </button>
+     </div>
+   </form>
 
     <div class="row mb-4">
       <div class="col-12">
@@ -67,10 +91,10 @@
     </div>
 
     <div class="row mb-4">
-      <h2>Resultados</h2>
+      <h2>Resultado</h2>
 
       <div class="col-6">
-        <label for="resultado1">Resultado Equipo 1:</label>
+        <label for="resultado1">Equipo 1:</label>
         <input
           type="number"
           class="form-control mb-3"
@@ -79,7 +103,7 @@
         />
       </div>
       <div class="col-6">
-        <label for="resultado2">Resultado Equipo 2:</label>
+        <label for="resultado2">Equipo 2:</label>
         <input
           type="number"
           class="form-control mb-3"

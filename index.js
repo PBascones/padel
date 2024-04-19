@@ -8,13 +8,14 @@ let jugadoresAfuera = [];
 let equipos = [];
 let resultados = [];
 let ranking = [];
+let cantidadDeJugadoresEsperando = 0;
 
 function agregarJugador() {
   const nombre = document.getElementById("player-name").value;
   if (nombre !== "") {
     const player = {
       id,
-      nombre: nombre,
+      nombre,
       partidos: 0,
       puntos: 0,
     };
@@ -25,6 +26,7 @@ function agregarJugador() {
 
     document.getElementById("player-name").value = "";
     mostrarJugadores();
+    establecerContadorDeJugadores();
     sumarRankings(true);
   }
 }
@@ -59,6 +61,15 @@ function eliminarJugadores() {
   mostrarJugadores();
   
   location.reload();
+}
+
+crearEquipos = () => {
+  if (jugadores.length < 4) {
+    alert("Necesitas al menos 4 jugadores para iniciar un partido.");
+    return;
+  }
+
+  
 }
 
 function iniciarPartido() {
@@ -125,6 +136,37 @@ function intercambiarJugadores() {
 
   jugadoresAdentro.push(jugadoresAfuera[0]);
   jugadoresAdentro.push(jugadoresAfuera[1]);
+
+  // reset partidos quienes salen
+  jugadoresAfuera = [];
+
+  jugadoresSalen.forEach((j) => {
+    j.partidos = 0;
+    jugadoresAfuera.push(j);
+  });
+}
+
+function intercambiarJugadores2() {
+  let jugadoresQueMasJugaron = jugadoresAdentro.sort((a,b) => b.partidos - a.partidos);
+
+  // Logica para sacar a los que mas jugaron (dependiendo cuantos hay afuera)
+  let jugadoresSalen = [];
+
+  for (let i = 0; i < jugadoresAfuera.length; i++) {
+    jugadoresSalen.push(jugadoresQueMasJugaron[i]);
+  }
+
+  // reset equipos
+  // equipos
+
+
+  // // sacar jugadores
+  // jugadoresAdentro = jugadoresAdentro.filter(
+  //   (j) => !jugadoresSalen.map((jj) => jj.id).includes(j.id)
+  // );
+
+  // jugadoresAdentro.push(jugadoresAfuera[0]);
+  // jugadoresAdentro.push(jugadoresAfuera[1]);
 
   // reset partidos quienes salen
   jugadoresAfuera = [];
@@ -233,3 +275,10 @@ mostrarJugadores();
 sumarRankings(true);
 
 // hacer que se inicie un nuevo partido desp de confirmar
+
+establecerContadorDeJugadores = () => {
+  const jugadoresEsperandoCount = 4 - jugadores.length;
+  cantidadDeJugadoresEsperando = jugadoresEsperandoCount > 0 ? jugadoresEsperandoCount : 0;
+}
+
+
